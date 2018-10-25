@@ -6,6 +6,7 @@ import config
 from dbhelper import DBHelper
 import datetime
 from nbadaily import NSN
+from nbastanding import NBAStanding as NSS
 
 TOKEN = config.token
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
@@ -90,6 +91,16 @@ def handle_updates(updates):
                 send_message("/get\tGet today's NBA scores!", chat)
                 time.sleep(0.5)
                 send_message(date_format(0) + "\n" + RESULTS, chat)
+            elif text.startswith("/standing"):
+                n = NSS()
+                ts = text.split(' ')
+                ll = len(ts)
+                if ll == 1:
+                    send_message(n.get_standings(), chat)
+                elif ts[1].lower().startswith('w'):
+                    send_message(n.get_standings("WEST"), chat)
+                else:
+                    send_message(n.get_standings("EAST"), chat)
             elif text == "/help":
                 send_message("/get\tGet today's NBA scores!", chat)
             else:
