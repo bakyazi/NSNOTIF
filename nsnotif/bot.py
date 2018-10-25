@@ -71,7 +71,10 @@ def handle_updates(updates):
                 send_message(date_format(0) + "\n" + RESULTS, chat)
             elif text == "/start":
                 chat_info = update["message"]["chat"]
-                add_user(chat_info["username"], chat)
+                if chat_info["type"] == "private":
+                    add_user(chat_info["username"], chat)
+                else:
+                    add_user(chat_info["type"]+str(chat), chat)
 
                 send_message("/get\tGet today's NBA scores!", chat)
                 time.sleep(0.5)
