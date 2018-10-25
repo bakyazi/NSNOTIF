@@ -42,11 +42,17 @@ def get_last_update_id(updates):
     return max(update_ids)
 
 
-def should_be_update_info():
+def should_be_update_info_by_hour():
     global LAST_HOUR
     res = LAST_HOUR != datetime.datetime.now().hour
     if res:
         LAST_HOUR = datetime.datetime.now().hour
+        return True
+    return False
+
+
+def should_be_update_info():
+    if datetime.datetime.now().hour == 7:
         return True
     return False
 
@@ -61,13 +67,18 @@ def add_user(username,cid):
     if not user:
         db.add_user(username, cid)
 
+
 def handle_updates(updates):
+    global RESULTS
     for update in updates["result"]:
         if "text" in update["message"].keys():
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
             print("%s : %s"%(text,chat))
             if text.startswith("/get"):
+                RESULTS = NSN().get()
+                if config.current_result != RESULTS:
+                    config.current_result = RESULTS
                 send_message(date_format(0) + "\n" + RESULTS, chat)
             elif text == "/start":
                 chat_info = update["message"]["chat"]
