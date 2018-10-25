@@ -53,7 +53,7 @@ def should_be_update_info_by_hour():
 
 
 def should_be_update_info():
-    if datetime.datetime.now().hour == 7:
+    if datetime.datetime.now().hour == 6:
         return True
     return False
 
