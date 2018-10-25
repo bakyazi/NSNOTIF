@@ -18,7 +18,7 @@ class NBAStanding:
         res = ""
         res += conf["conf-name"] +"\n"
         for team in conf["teams"]:
-            res += "{}\t-{}\tW{}/L{}\n".format(team[0],team[1],team[2],team[3])
+            res += "{}-{}       W{}/L{}\n".format(team[0],team[1],team[2],team[3])
 
         return res
 
