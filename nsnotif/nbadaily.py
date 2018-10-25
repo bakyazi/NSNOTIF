@@ -13,10 +13,10 @@ class NSN:
 
 	def get_json_from_url(self,url):
 		return json.loads(requests.get(url).content)
-	
+
 
 	def extract_team_name(self,team):
-		return team['profile']['cityEn'].capitalize() + " " + team['profile']['code'].capitalize()
+		return team['profile']['abbr']
 
 	def print_games(self,games):
 		max_length = max(map(lambda x: get_width(x),games))
@@ -37,35 +37,12 @@ class NSN:
 			home_score = game['boxscore']['homeScore']
 			away_name = self.extract_team_name(game['awayTeam'])
 			away_score = game['boxscore']['awayScore']
-			
-			game_str = "HOME | " + home_name + " : " + str(home_score) + "\nAWAY | " + away_name + " : " + str(away_score)
-			
-			game_list.append(game_str)
-			
-		return self.print_games(game_list)
 
-	def get_before(self,day_before):
-		d = datetime.datetime.now() - datetime.timedelta(day_before)
-		q = "?gameDate=" + str(d.year)+"-"+str(d.month)+"-"+str(d.day)
-		url = 'https://tr.global.nba.com/stats2/scores/daily.json'+q
-		json_raw = self.get_json_from_url(url)
-		try:
-			games = json_raw['payload']['date']['games']
-			game_list = list()
-			for game in games:
-				home_name = self.extract_team_name(game['homeTeam'])
-				home_score = game['boxscore']['homeScore']
-				away_name = self.extract_team_name(game['awayTeam'])
-				away_score = game['boxscore']['awayScore']
+			game_list.append(tuple([home_name, str(home_score), away_name, str(away_score)]))
 
-				game_str = "HOME | " + home_name + " : " + str(home_score) + "\nAWAY | " + away_name + " : " + str(
-					away_score)
 
-				game_list.append(game_str)
+		return game_list
 
-			return self.print_games(game_list)
-		except:
-			return "NO RECORD FOUND"
 
 #nsn = NSN()
 #print(nsn.get_before(1))

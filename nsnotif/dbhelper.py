@@ -9,7 +9,9 @@ class DBHelper:
 
     def setup(self):
         tblstmt = "CREATE TABLE IF NOT EXISTS users (username text , cid text, PRIMARY KEY(username))"
+        tblstmt1 = "CREATE TABLE IF NOT EXISTS teams (username text , team text, PRIMARY KEY(username,team))"
         self.conn.execute(tblstmt)
+        self.conn.execute(tblstmt1)
         self.conn.commit()
 
     def add_user(self, username, cid):
@@ -38,7 +40,22 @@ class DBHelper:
         args = (username,)
         return self.conn.execute(stmt,args)[0]
 
+    def add_team(self,username,team):
+        stmt = "INSERT INTO teams (username, team) VALUES (?, ?)"
+        args = (username, team)
+        self.conn.execute(stmt, args)
+        self.conn.commit()
 
+    def delete_team(self, username,team):
+        stmt = "DELETE FROM teams WHERE username = (?) AND team = (?)"
+        args = (username,team)
+        self.conn.execute(stmt, args)
+        self.conn.commit()
+
+    def get_teams(self,username):
+        stmt = "SELECT * FROM teams WHERE username = (?)"
+        args = (username,)
+        return [x[1] for x in self.conn.execute(stmt,args)]
 
     
             
